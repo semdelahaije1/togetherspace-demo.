@@ -83,6 +83,10 @@ button, .btn, nav button { touch-action: manipulation; }
   .chat-compose button { flex: 1; }
 }
 
+
+.profile-form{display:grid;gap:9px}.profile-form label{font-weight:700;font-size:13px;margin-top:5px}.profile-form input,.profile-form textarea,.profile-form select{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--ink);background:#fbfdff}.profile-preview{margin-top:16px;padding:16px;border-radius:14px;background:var(--mint);line-height:1.6}.messages-layout{display:grid;grid-template-columns:minmax(170px,220px) minmax(0,760px);gap:14px;align-items:start}.contact-panel{display:grid;gap:8px}.contact-panel h3{margin-bottom:4px}.contact{border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px;text-align:left;color:var(--ink);font-weight:700;min-height:48px}.contact.active{background:var(--blue);border-color:#bcd8ff}.contact small{display:block;font-weight:400;color:var(--muted);margin-top:3px}.chat-status{font-size:12px}.reported{opacity:.6;border-style:dashed}
+@media(max-width:650px){.messages-layout{grid-template-columns:1fr}.contact-panel{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.contact-panel h3{grid-column:1/-1}.contact{padding:9px 7px;font-size:12px;overflow-wrap:anywhere}.contact small{font-size:10px}.chat-compose{display:flex;flex-wrap:nowrap}.chat-compose input{flex:1;min-width:0}.chat-compose button{flex:0 0 auto}}
+
 </style>
 </head>
 <body>
@@ -94,6 +98,8 @@ button, .btn, nav button { touch-action: manipulation; }
     <button data-view="community">♧ &nbsp; Community</button>
     <button data-view="chat">✧ &nbsp; AI-chat</button>
     <button data-view="groups">◎ &nbsp; Groepen</button>
+    <button data-view="messages">✉ &nbsp; Berichten</button>
+    <button data-view="account">♙ &nbsp; Profiel</button>
     <button data-view="safety">♡ &nbsp; Veiligheid</button>
   </nav>
   <div class="side-note"><div style="font-size:27px">🫶</div><strong>Samen staan we sterker</strong><br>Een veilige plek om ervaringen te delen en je minder alleen te voelen.</div>
@@ -130,13 +136,50 @@ button, .btn, nav button { touch-action: manipulation; }
         <form class="chat-compose" id="chatForm"><input id="chatInput" placeholder="Typ een algemeen bericht…" maxlength="300" autocomplete="off"><button class="btn" type="submit">Verstuur</button></form>
       </div>
     </section>
+
+    <section id="account" class="view">
+      <div class="section-head"><h2>Jouw profiel</h2><span class="muted">Profielvoorbeeld</span></div>
+      <div class="notice">Dit is alleen een lokale demo: er wordt geen echt account gemaakt. Gebruik geen wachtwoord of echte medische/persoonlijke gegevens. Voor echte accounts is een beveiligde backend nodig.</div>
+      <div class="panel" style="max-width:680px">
+        <h3>Maak een demo-profiel</h3>
+        <form id="profileForm" class="profile-form">
+          <label for="displayName">Schermnaam (geen volledige naam)</label>
+          <input id="displayName" maxlength="24" placeholder="Bijv. BlauweSter" required>
+          <label for="aboutMe">Wat wil je delen? (optioneel)</label>
+          <textarea id="aboutMe" maxlength="160" rows="3" placeholder="Bijv. Ik hou van tekenen en dieren. Deel geen diagnose of privégegevens."></textarea>
+          <label for="ageRange">Leeftijdsgroep (optioneel)</label>
+          <select id="ageRange"><option value="">Liever niet zeggen</option><option>Onder 13</option><option>13–15</option><option>16–17</option><option>18+</option></select>
+          <button class="btn" type="submit">Bekijk demo-profiel</button>
+        </form>
+        <div id="profilePreview" class="profile-preview" hidden></div>
+      </div>
+    </section>
+    <section id="messages" class="view">
+      <div class="section-head"><h2>Berichten</h2><span class="muted">Lokale chatdemo</span></div>
+      <div class="notice">Deze berichten worden alleen in dit geopende prototype getoond. Niemand anders ontvangt ze. Echte privé- en groepschats vereisen accounts, een database, toegangsregels en een meld-/blokkeersysteem.</div>
+      <div class="messages-layout">
+        <div class="panel contact-panel">
+          <h3>Gesprekken</h3>
+          <button class="contact active" data-contact="Maan">🌙 Maan <small>Voorbeeldcontact</small></button>
+          <button class="contact" data-contact="Ster">⭐ Ster <small>Voorbeeldcontact</small></button>
+          <button class="contact" data-contact="Groepsruimte">🫶 Groepsruimte <small>Voorbeeldgroep</small></button>
+        </div>
+        <div class="chat-wrap">
+          <div class="chat-head"><div class="logo">💬</div><div><strong id="messageTitle">Chat met Maan</strong><div class="muted">Fictief gesprek · demo</div></div></div>
+          <div class="chat-body" id="messageBody" aria-live="polite"><div class="bubble">Hoi! Fijn dat je er bent. Wat vind jij leuk om te doen in je vrije tijd?</div></div>
+          <form class="chat-compose" id="messageForm"><input id="messageInput" maxlength="500" placeholder="Schrijf een vriendelijk bericht…" autocomplete="off" required><button class="btn" type="submit">Verstuur</button></form>
+          <div style="padding:0 14px 14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary small" id="reportChat" type="button">Meld gesprek</button><button class="btn secondary small" id="blockChat" type="button">Blokkeer contact</button></div>
+          <p id="chatStatus" class="muted" style="padding:0 14px 12px;margin:0" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
     <section id="safety" class="view">
       <div class="section-head"><h2>Veiligheid en steun</h2></div>
       <div class="notice">Deze demo is niet bedoeld voor crisishulp en wordt niet door moderators bewaakt.</div>
-      <div class="panel"><h3>Onze basisregels</h3><ul style="line-height:1.9;color:#536986"><li>Behandel elkaar vriendelijk en respectvol.</li><li>Deel geen privégegevens van jezelf of anderen.</li><li>Geef geen diagnoses of voorschriften; deel alleen ervaringen.</li><li>In een echte versie moeten gebruikers berichten kunnen melden en blokkeren.</li><li>Voor kinderen moet veiligheid ontworpen en getest worden vóór de lancering.</li></ul></div>
+      <div class="panel"><h3>Onze basisregels</h3><ul style="line-height:1.9;color:#536986"><li>Behandel elkaar vriendelijk en respectvol.</li><li>Deel geen privégegevens van jezelf of anderen.</li><li>Geef geen diagnoses of voorschriften; deel alleen ervaringen.</li><li>Gebruik de demo-knoppen hieronder om een voorbeeldmelding of blokkade te testen.</li><li>Voor de echte lancering zijn moderators, serverbeveiliging en een getest meldproces nodig.</li></ul></div>
       <div class="panel" style="margin-top:14px"><h3>Hulp nodig?</h3><p style="color:#536986;line-height:1.7">Praat met iemand die je vertrouwt, zoals een ouder/verzorger, mentor of zorgverlener. Bij direct gevaar in Nederland bel je 112.</p></div>
     </section>
-    <footer class="wide">TogetherSpace demo · Fictieve inhoud · Geen accounts, opslag of echte berichten</footer>
+    <footer class="wide">TogetherSpace prototype · Voorbeeldprofielen en lokale chatdemo · Nog geen echte accounts of online berichten</footer>
     <aside class="right" style="border:0;padding:0;background:transparent">
       <div class="panel"><h3>Populaire groepen</h3><div id="sideGroups"></div><button class="btn secondary small" data-go="groups" style="margin-top:12px">Alle groepen bekijken</button></div>
       <div class="panel help"><h3>💙 Een kleine herinnering</h3><p>Je hoeft niet alles zelf uit te zoeken. Er zijn mensen die willen luisteren en met je meedenken.</p><button class="btn secondary small" data-go="safety">Bekijk veiligheid</button></div>
@@ -178,6 +221,59 @@ const responses=[
  {keys:["ziek","diagnose","medic"],text:"Ik kan geen medische beoordeling geven. Voor vragen over klachten of behandeling kun je het beste een arts of zorgverlener spreken. We kunnen wel praten over hoe je je voelt en welke steun je prettig vindt."}
 ];
 document.getElementById("chatForm").addEventListener("submit",e=>{e.preventDefault();const input=document.getElementById("chatInput"),val=input.value.trim();if(!val)return;const body=document.getElementById("chatBody");const user=document.createElement("div");user.className="bubble user";user.textContent=val;body.appendChild(user);input.value="";const found=responses.find(r=>r.keys.some(k=>val.toLowerCase().includes(k)));const reply=found?found.text:"Bedankt dat je dat deelt. Ik ben een demo-chatbot met beperkte antwoorden. Misschien kunnen we beginnen met: wat zou je op dit moment helpen om je iets meer gesteund te voelen? Deel geen namen of privégegevens.";setTimeout(()=>{const bot=document.createElement("div");bot.className="bubble";bot.textContent=reply;body.appendChild(bot);body.scrollTop=body.scrollHeight},250);body.scrollTop=body.scrollHeight});
+
+// Demo-profiel: alleen in deze browserpagina, zonder wachtwoorden.
+document.getElementById("profileForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=document.getElementById("displayName").value.trim();
+  const about=document.getElementById("aboutMe").value.trim();
+  const age=document.getElementById("ageRange").value;
+  if(!name) return;
+  const preview=document.getElementById("profilePreview");
+  preview.hidden=false;
+  preview.replaceChildren();
+  const title=document.createElement("strong"); title.textContent="💙 "+name; preview.appendChild(title);
+  if(age){const ageLine=document.createElement("div");ageLine.textContent="Leeftijdsgroep: "+age;preview.appendChild(ageLine);}
+  const aboutLine=document.createElement("p");aboutLine.textContent=about||"Nog geen introductie toegevoegd.";preview.appendChild(aboutLine);
+  const note=document.createElement("small");note.textContent="Dit profiel is alleen een voorbeeld en is niet online zichtbaar.";preview.appendChild(note);
+});
+let activeContact="Maan";
+const demoMessages={
+  "Maan":[{who:"other",text:"Hoi! Fijn dat je er bent. Wat vind jij leuk om te doen in je vrije tijd?"}],
+  "Ster":[{who:"other",text:"Hoi! Dit is een fictief voorbeeldgesprek. Je mag altijd rustig nadenken voordat je antwoordt."}],
+  "Groepsruimte":[{who:"other",text:"Welkom in de voorbeeldgroep! Houd het vriendelijk en deel geen privégegevens."}]
+};
+function renderDemoMessages(){
+  const body=document.getElementById("messageBody");body.replaceChildren();
+  (demoMessages[activeContact]||[]).forEach(m=>{const b=document.createElement("div");b.className="bubble"+(m.who==="me"?" user":"");b.textContent=m.text;body.appendChild(b);});
+  body.scrollTop=body.scrollHeight;
+  document.getElementById("messageTitle").textContent=activeContact==="Groepsruimte"?"Groepsruimte":"Chat met "+activeContact;
+  document.querySelectorAll(".contact").forEach(b=>b.classList.toggle("active",b.dataset.contact===activeContact));
+  document.getElementById("chatStatus").textContent="";
+}
+document.querySelectorAll(".contact").forEach(b=>b.addEventListener("click",()=>{activeContact=b.dataset.contact;renderDemoMessages();}));
+document.getElementById("messageForm").addEventListener("submit",e=>{
+  e.preventDefault();const input=document.getElementById("messageInput");const val=input.value.trim();if(!val)return;
+  if(!demoMessages[activeContact])demoMessages[activeContact]=[];
+  demoMessages[activeContact].push({who:"me",text:val});input.value="";renderDemoMessages();
+});
+document.getElementById("reportChat").addEventListener("click",()=>{
+  document.getElementById("chatStatus").textContent="Demo: meldoptie getest. In de echte versie moet dit veilig bij een moderator terechtkomen.";
+});
+document.getElementById("blockChat").addEventListener("click",()=>{
+  const ok=confirm("Wil je dit voorbeeldcontact in deze demo blokkeren? Dit blokkeert niemand op een echte dienst.");
+  if(ok){document.getElementById("chatStatus").textContent=activeContact+" is in deze demo gemarkeerd als geblokkeerd. Er is geen echte gebruiker geblokkeerd.";}
+});
+// Voeg duidelijke meld-/blokkeerknoppen toe aan voorbeeldposts.
+document.querySelectorAll("#communityPosts .post").forEach((card,i)=>{
+  const actions=document.createElement("div");actions.style.cssText="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px";
+  const report=document.createElement("button");report.type="button";report.className="btn secondary small";report.textContent="Meld voorbeeld";
+  report.addEventListener("click",()=>{report.textContent="Gemarkeerd ✓";report.disabled=true;const msg=document.createElement("p");msg.className="muted";msg.textContent="Demo-melding: niet naar een moderator verstuurd.";card.appendChild(msg);});
+  const block=document.createElement("button");block.type="button";block.className="btn secondary small";block.textContent="Verberg voorbeeld";
+  block.addEventListener("click",()=>{card.classList.add("reported");card.style.display="none";});
+  actions.append(report,block);card.appendChild(actions);
+});
+
 </script>
 </body>
 </html>
